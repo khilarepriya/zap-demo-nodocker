@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Checkout Code') {
       steps {
-        git 'https://github.com/khilarepriya/zap-demo-nodocker.git'
+        git branch: 'main', credentialsId: 'github-token', url: 'https://github.com/khilarepriya/zap-demo-nodocker.git'
       }
     }
 
