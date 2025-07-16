@@ -52,6 +52,12 @@ pipeline {
         ])
       }
     }
+
+    stage('Show ZAP Report URL') {
+      steps {
+        echo "📄 ZAP Report available at: ${env.BUILD_URL}zap-dast-scan-report"
+      }
+    }
   }
 
   post {
@@ -61,3 +67,4 @@ pipeline {
     }
   }
 }
+
