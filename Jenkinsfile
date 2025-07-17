@@ -49,6 +49,8 @@ pipeline {
             -quickprogress
 
           echo "✅ ZAP scan completed"
+          ls -lh zap_report.html || echo "⚠️ Report not found"
+          cat zap_report.html || echo "⚠️ Report is empty"
         '''
       }
     }
