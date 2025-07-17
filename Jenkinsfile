@@ -38,6 +38,9 @@ pipeline {
             echo "⏳ Still waiting..."
             sleep 2
           done
+          echo "❌ App did not start in time." >&2
+          kill $APP_PID
+          exit 1
         '''
       }
     }
