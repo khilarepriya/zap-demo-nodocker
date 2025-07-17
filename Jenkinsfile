@@ -99,7 +99,7 @@ pipeline {
       script {
         def reportUrl = "${env.BUILD_URL}artifact/zap_report.html"
         echo "📄 ZAP Report available at: ${reportUrl}"
+      }
     }
   }
 }
-
