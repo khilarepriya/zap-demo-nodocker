@@ -93,8 +93,14 @@ pipeline {
 
   post {
     always {
+      // Stop the app if it's running
       sh 'pkill -f app.py || true'
+    
+      // Archive the ZAP report
       archiveArtifacts artifacts: 'zap_report.html', fingerprint: true
+
+      // Echo the report URL for quick access
+      echo "📄 ZAP Report available at: ${env.BUILD_URL}artifact/zap_report.html"
     }
   }
 }
