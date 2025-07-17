@@ -43,6 +43,7 @@ pipeline {
           echo "⚙️ Starting ZAP scan on http://localhost:5010"
 
           /opt/zaproxy/zap.sh -cmd \
+            -port 8091 \
             -quickurl http://localhost:5010 \
             -quickout zap_report.html \
             -quickprogress
