@@ -28,23 +28,29 @@ pipeline {
       steps {
         sh '''
           . venv/bin/activate
+
+          echo "🚀 Starting Flask app..."
           nohup python app.py > app.log 2>&1 &
+          APP_PID=$!
+
           echo "⏳ Waiting for app to start..."
           for i in {1..10}; do
             if curl -s http://localhost:5010 >/dev/null; then
               echo "✅ App is up!"
-              break
+              exit 0
             fi
             echo "⏳ Still waiting..."
             sleep 2
           done
-          echo "❌ App did not start in time." >&2
+
+          echo "❌ App did not start in time."
+          echo "📜 Logs:"
+          cat app.log || echo "⚠️ No app.log found"
           kill $APP_PID
           exit 1
         '''
       }
     }
-    
 
     stage('Run ZAP Scan') {
       steps {
