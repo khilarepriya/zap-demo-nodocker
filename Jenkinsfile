@@ -26,16 +26,22 @@ pipeline {
 
     stage('Start Web App') {
       steps {
-        script {
-          // Run in background
-          sh '''
-            . venv/bin/activate
-            nohup python3 app.py > app.log 2>&1 &
-          '''
-          sleep 10 // wait for app to be ready
-        }
+        sh '''
+          . venv/bin/activate
+          nohup python app.py > app.log 2>&1 &
+          echo "⏳ Waiting for app to start..."
+          for i in {1..10}; do
+            if curl -s http://localhost:5010 >/dev/null; then
+              echo "✅ App is up!"
+              break
+            fi
+            echo "⏳ Still waiting..."
+            sleep 2
+          done
+        '''
       }
     }
+    
 
     stage('Run ZAP Scan') {
       steps {
