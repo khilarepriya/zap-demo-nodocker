@@ -66,7 +66,7 @@ pipeline {
 
           echo "✅ ZAP scan completed"
           ls -lh zap_report.html || echo "⚠️ Report not found"
-          cat zap_report.html || echo "⚠️ Report is empty"
+        #  cat zap_report.html || echo "⚠️ Report is empty"
         '''
       }
     }
@@ -93,14 +93,12 @@ pipeline {
 
   post {
     always {
-      // Stop the app if it's running
       sh 'pkill -f app.py || true'
-    
-      // Archive the ZAP report
+      sh 'ls -lh zap_report.html || echo "ZAP report not found!"'
       archiveArtifacts artifacts: 'zap_report.html', fingerprint: true
-
-      // Echo the report URL for quick access
-      echo "📄 ZAP Report available at: ${env.BUILD_URL}artifact/zap_report.html"
+      script {
+        def reportUrl = "${env.BUILD_URL}artifact/zap_report.html"
+        echo "📄 ZAP Report available at: ${reportUrl}"
     }
   }
 }
