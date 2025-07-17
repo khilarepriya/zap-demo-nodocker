@@ -27,15 +27,16 @@ pipeline {
     stage('Start Web App') {
       steps {
         sh '''
+          echo "🐍 Activating virtualenv..."
           . venv/bin/activate
 
           echo "🚀 Starting Flask app..."
-          nohup python app.py > app.log 2>&1 &
+          nohup venv/bin/python app.py > app.log 2>&1 &
           APP_PID=$!
 
           echo "⏳ Waiting for app to start..."
           for i in {1..10}; do
-            if curl -s http://localhost:5010 >/dev/null; then
+            if curl -s http://127.0.0.1:5010 >/dev/null; then
               echo "✅ App is up!"
               exit 0
             fi
