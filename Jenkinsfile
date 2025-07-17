@@ -28,7 +28,10 @@ pipeline {
       steps {
         script {
           // Run in background
-          sh 'nohup python3 app.py &'
+          sh '''
+            . venv/bin/activate
+            nohup python3 app.py > app.log 2>&1 &
+          '''
           sleep 10 // wait for app to be ready
         }
       }
