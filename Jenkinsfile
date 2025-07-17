@@ -39,7 +39,14 @@ pipeline {
 
     stage('Run ZAP Scan') {
       steps {
-        sh './zap_scan.sh'
+        sh '''
+          echo "⚙️ Starting ZAP scan on http://localhost:5010"
+
+          /opt/zaproxy/zap.sh -cmd -quickurl http://localhost:5010 \
+            -quickout zap_report.html -quickprogress -quickscan
+
+          echo "✅ ZAP scan completed"
+        '''
       }
     }
 
