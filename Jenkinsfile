@@ -42,7 +42,7 @@ pipeline {
               echo "✅ Flask app is running!"
               exit 0
             else
-              echo "⏳ Still waiting for Flask..."
+              echo "⏳ Still waiting for Flask... ($i)"
               sleep 2
             fi
           done
@@ -51,7 +51,7 @@ pipeline {
           echo "📜 Logs:"
           cat app.log
           echo "🛑 Killing Flask process $APP_PID"
-          kill $APP_PID
+          kill $APP_PID || true
           exit 1
         '''
       }
