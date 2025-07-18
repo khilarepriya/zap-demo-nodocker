@@ -70,12 +70,10 @@ pipeline {
 
           echo "✅ ZAP scan completed"
           ls -lh zap_report.html || echo "⚠️ Report not found"
-        #  cat zap_report.html || echo "⚠️ Report is empty"
         '''
       }
     }
 
-    // ✅ New Stage: Convert ZAP HTML report to PDF
     stage('Convert ZAP Report to PDF') {
       steps {
         sh '''
@@ -126,3 +124,4 @@ pipeline {
     }
   }
 }
+
