@@ -31,8 +31,11 @@ pipeline {
           echo "🐍 Activating virtualenv..."
           . venv/bin/activate
 
+          echo "🧹 Cleaning old logs..."
+          rm -f app.log nohup.out || echo "⚠️ Could not delete old logs"
+
           echo "🚀 Starting Flask app in background..."
-          nohup venv/bin/python app.py > app.log 2>&1 &
+          nohup python app.py > app.log 2>&1 &
           APP_PID=$!
           echo "Flask started with PID: $APP_PID"
 
@@ -40,19 +43,21 @@ pipeline {
           for i in {1..10}; do
             if curl -s http://127.0.0.1:5010 > /dev/null; then
               echo "✅ Flask app is running!"
-              exit 0
+              break
             else
               echo "⏳ Still waiting for Flask... ($i)"
               sleep 2
             fi
           done
 
-          echo "❌ App did not start in time."
-          echo "📜 Logs:"
-          cat app.log
-          echo "🛑 Killing Flask process $APP_PID"
-          kill $APP_PID || true
-          exit 1
+          if ! curl -s http://127.0.0.1:5010 > /dev/null; then
+            echo "❌ App did not start in time."
+            echo "📜 Logs:"
+            cat app.log || echo "⚠️ No app.log found"
+            echo "🛑 Killing Flask process $APP_PID"
+            kill $APP_PID || true
+            exit 1
+          fi
         '''
       }
     }
