@@ -4,6 +4,7 @@ pipeline {
   environment {
     PYTHONPATH = "${WORKSPACE}"
     ZAP_REPORT = "zap_report.html"
+    ZAP_REPORT_PDF = "zap_report.pdf"
   }
 
   stages {
@@ -67,6 +68,25 @@ pipeline {
           echo "✅ ZAP scan completed"
           ls -lh zap_report.html || echo "⚠️ Report not found"
         #  cat zap_report.html || echo "⚠️ Report is empty"
+        '''
+      }
+    }
+
+    // ✅ New Stage: Convert ZAP HTML report to PDF
+    stage('Convert ZAP Report to PDF') {
+      steps {
+        sh '''
+          if [ -f "${ZAP_REPORT}" ]; then
+            echo "📄 Converting ${ZAP_REPORT} to PDF..."
+            wkhtmltopdf "${ZAP_REPORT}" "${ZAP_REPORT_PDF}" || {
+              echo "❌ Failed to convert HTML to PDF"
+              exit 1
+            }
+            echo "✅ PDF generated: ${ZAP_REPORT_PDF}"
+          else
+            echo "❌ ${ZAP_REPORT} not found"
+            exit 1
+          fi
         '''
       }
     }
