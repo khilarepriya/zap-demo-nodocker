@@ -33,6 +33,7 @@ pipeline {
 
           echo "🚀 Starting Flask app..."
           nohup venv/bin/python app.py > app.log 2>&1 &
+          APP_PID=$!
 
           echo "⏳ Waiting for app to start..."
           for i in {1..10}; do
@@ -48,6 +49,7 @@ pipeline {
           echo "❌ App did not start in time."
           echo "📜 Logs:"
           cat app.log
+          kill $APP_PID
           exit 1
         '''
       }
