@@ -33,22 +33,21 @@ pipeline {
 
           echo "🚀 Starting Flask app..."
           nohup venv/bin/python app.py > app.log 2>&1 &
-         # APP_PID=$!
 
           echo "⏳ Waiting for app to start..."
           for i in {1..10}; do
-            if curl -s http://127.0.0.1:5010 >/dev/null; then
-              echo "✅ App is up!"
+            if curl -s http://127.0.0.1:5010 > /dev/null; then
+              echo "✅ App is running!"
               exit 0
+            else
+              echo "⏳ Still waiting..."
+              sleep 2
             fi
-            echo "⏳ Still waiting..."
-            sleep 2
           done
 
           echo "❌ App did not start in time."
           echo "📜 Logs:"
-          cat app.log || echo "⚠️ No app.log found"
-         # kill $APP_PID
+          cat app.log
           exit 1
         '''
       }
